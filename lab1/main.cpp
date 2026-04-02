@@ -7,8 +7,7 @@ using namespace std;
 int main() {
     const char *receiptName = "receipt.txt";
 
-    FILE *my_file;
-    my_file = fopen(receiptName, "w");
+    FILE *my_file = fopen(receiptName, "w");
 
     if (!my_file) {
         cout << "Could not create receipt.txt" << endl;
