@@ -4,7 +4,6 @@
 
 using namespace std;
 
-// Нормалізація (копійки < 100)
 void normalize(money *m) {
     if (m->kop >= 100) {
         m->grn += m->kop / 100;
@@ -18,21 +17,18 @@ void normalize(money *m) {
     }
 }
 
-// Додавання
 void sum(money *a, money b) {
     a->grn += b.grn;
     a->kop += b.kop;
     normalize(a);
 }
 
-// Множення
 void multi(money *m, int n) {
     m->grn *= n;
     m->kop *= n;
     normalize(m);
 }
 
-// Округлення до 10 копійок
 void roundMoney(money *m) {
     int mod = m->kop % 10;
 
@@ -45,7 +41,6 @@ void roundMoney(money *m) {
     normalize(m);
 }
 
-// Читання файлу
 void parseLines(const char *file_name) {
     FILE *f = fopen(file_name, "r");
 
