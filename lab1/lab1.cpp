@@ -4,38 +4,48 @@
 
 using namespace std;
 
+// Нормалізація (копійки < 100)
 void normalize(money *m) {
-    m->grn += m->kop / 100;
-    m->kop = m->kop % 100;
+    if (m->kop >= 100) {
+        m->grn += m->kop / 100;
+        m->kop %= 100;
+    }
+
+    if (m->kop < 0) {
+        int borrow = (-m->kop + 99) / 100;
+        m->grn -= borrow;
+        m->kop += borrow * 100;
+    }
 }
 
+// Додавання
 void sum(money *a, money b) {
-    int total_kop = (a->grn * 100 + a->kop) + (b.grn * 100 + b.kop);
-    a->grn = total_kop / 100;
-    a->kop = total_kop % 100;
+    a->grn += b.grn;
+    a->kop += b.kop;
+    normalize(a);
 }
 
+// Множення
 void multi(money *m, int n) {
-    int total_kop = (m->grn * 100 + m->kop) * n;
-    m->grn = total_kop / 100;
-    m->kop = total_kop % 100;
+    m->grn *= n;
+    m->kop *= n;
+    normalize(m);
 }
 
+// Округлення до 10 копійок
 void roundMoney(money *m) {
     int mod = m->kop % 10;
 
     if (mod >= 5) {
         m->kop += (10 - mod);
-
-        if (m->kop >= 100) {
-            m->grn += 1;
-            m->kop -= 100;
-        }
     } else {
         m->kop -= mod;
     }
+
+    normalize(m);
 }
 
+// Читання файлу
 void parseLines(const char *file_name) {
     FILE *f = fopen(file_name, "r");
 
@@ -55,10 +65,10 @@ void parseLines(const char *file_name) {
     while (fgets(buffer, sizeof(buffer), f)) {
         quantity = 1;
 
-        int parseItemsCount =
+        int parsed =
             sscanf(buffer, "%255s %d %hd %d", item, &grn, &kop, &quantity);
 
-        if (parseItemsCount >= 3) {
+        if (parsed >= 3) {
 
             if (quantity < 0 || grn < 0 || kop < 0) {
                 cout << "Incorrect format of input" << endl;
@@ -67,8 +77,6 @@ void parseLines(const char *file_name) {
             }
 
             money m = {grn, kop};
-
-            // нормалізація після створення
             normalize(&m);
 
             if (quantity > 1) {
