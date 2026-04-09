@@ -9,12 +9,6 @@ void normalize(money *m) {
         m->grn += m->kop / 100;
         m->kop %= 100;
     }
-
-    if (m->kop < 0) {
-        int borrow = (-m->kop + 99) / 100;
-        m->grn -= borrow;
-        m->kop += borrow * 100;
-    }
 }
 
 void sum(money *a, money b) {
